@@ -1,0 +1,8 @@
+import axios from 'axios';
+
+const axiosInstance = axios.create({
+  xsrfCookieName: 'csrftoken',
+  xsrfHeaderName: 'X-CSRFToken',
+});
+
+export default axiosInstance;

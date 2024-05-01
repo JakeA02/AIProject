@@ -1,5 +1,5 @@
-// LoginPage.js
 import React, { useState } from 'react';
+import axiosInstance from './axiosInstance';
 
 function LoginPage() {
     const [username, setUsername] = useState('');
@@ -13,11 +13,22 @@ function LoginPage() {
         setPassword(event.target.value);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        // TODO: Send login request to Django backend
-        console.log('Login submitted:', username, password);
-    };
+        try {
+          const response = await axiosInstance.post('/api/login/', { username, password });
+          if (response.data.success) {
+            // Login successful, redirect to the homepage
+            window.location.href = '/home';
+          } else {
+            // Login failed, display an error message
+            console.error('Login failed:', response.data.error);
+          }
+        } catch (error) {
+          console.error('Login error:', error);
+        }
+      };
+            
 
     return (
         <div className="login-page">
@@ -43,8 +54,14 @@ function LoginPage() {
                 </div>
                 <button type="submit">Login</button>
             </form>
-        </div>
+             <p>
+           Don't have an account? <a href="/register">Register</a>
+            </p>
+         </div>
+    
+        
     );
+    
 }
 
 export default LoginPage;
